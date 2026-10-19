@@ -1,0 +1,174 @@
+
+# ==========================================
+# FRC Smart Power Distribution Board
+# ==========================================
+
+# ------------------------------------------
+# Altium Designer
+# ------------------------------------------
+**/History/
+**/__Previews/
+**/Project Logs*/
+**/Project Outputs*/
+
+*.SchDocPreview
+*.PcbDocPreview
+*.PcbDoc.htm
+*.PrjPcbStructure
+.~lock.*
+*.bak
+*.PrjPcb.Zip
+
+# ------------------------------------------
+# STM32 / Embedded Firmware
+# ------------------------------------------
+**/Debug/
+**/Release/
+**/build/
+
+*.o
+*.obj
+*.elf
+*.hex
+*.bin
+*.map
+*.lst
+*.d
+*.su
+
+# Keep STM32 project settings, .ioc files,
+# linker scripts, and source code.
+
+# ------------------------------------------
+# Web UI (Node.js / JavaScript)
+# ------------------------------------------
+node_modules/
+dist/
+coverage/
+.next/
+.vite/
+*.tsbuildinfo
+npm-debug.log*
+
+# ------------------------------------------
+# Python Scripts
+# ------------------------------------------
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+
+# ------------------------------------------
+# IDE and Editor Settings
+# ------------------------------------------
+.vs/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+
+# ------------------------------------------
+# Operating System
+# ------------------------------------------
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# ------------------------------------------
+# Temporary Files and Logs
+# ------------------------------------------
+*.tmp
+*.temp
+*.swp
+*.swo
+*.log
+*.cache
+
+# ------------------------------------------
+# Test Data / Generated Files
+# ------------------------------------------
+test-results/
+*.profraw
+*.profdata
+
+# ------------------------------------------
+# Secrets and Local Configuration
+# ------------------------------------------
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+
+# Additional generated files (existing rules above are retained)
+# Altium caches / backup copies; retain editable projects and libraries
+**/ProjectReports/
+*.SchDoc~
+*.PcbDoc~
+*.PrjPcb~
+
+# C / CMake / STM32 build products; retain .ioc, .project, .cproject and linker scripts
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+CTestTestfile.cmake
+compile_commands.json
+cmake-build-*/
+*.a
+*.lib
+*.so
+*.so.*
+*.dll
+*.exe
+*.pdb
+*.out
+*.axf
+*.gcda
+*.gcno
+*.gcov
+
+# Node package manager caches and generated test reports (keep lockfiles)
+.npm/
+.pnpm-store/
+.yarn/cache/
+.yarn/unplugged/
+.yarn/install-state.gz
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.nyc_output/
+playwright-report/
+blob-report/
+
+# Python packaging, environments, lint/test caches (keep dependency metadata)
+env/
+.tox/
+.nox/
+.ruff_cache/
+.hypothesis/
+*.egg-info/
+.eggs/
+.coverage
+.coverage.*
+htmlcov/
+.ipynb_checkpoints/
+pip-wheel-metadata/
+
+# FRC Java/Gradle output, if that toolchain is selected (keep wrapper files)
+.gradle/
+bin/
+
+# Additional Windows/editor noise
+ehthumbs.db
+$RECYCLE.BIN/
+*.stackdump
+*.sln.docstates
+*~
+
+# Local credential stores / private certificate containers
+.envrc.local
+*.p12
+*.pfx
