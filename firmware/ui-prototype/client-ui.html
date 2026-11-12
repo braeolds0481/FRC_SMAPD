@@ -21,7 +21,7 @@
     <style>
         :root {
             /* any style variables here */
-            --background-color: rgb(125, 122, 122);
+            --background-color: white;
         }
 
         body {
@@ -37,56 +37,82 @@
 
         .console-window {
             background-color: #1e1e1e;
-            width: 300px;
-            height: 150px;
+            color: white;
+            font-family:'Courier New', Courier, monospace;
+            border-radius: 8px;
             overflow: auto;
-            border: 2px solid #ccc;
-            color: #00ff00;
-            font-family: 'Courier New', Courier, monospace;
-            padding: 15px;
-            border-radius: 6px;
-            overflow-y: auto;
-            
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
         }
+
+        .console-log-command {
+            color: lightskyblue;
+        }
+        .console-log-info {
+            color: white;
+        }
+        .console-log-error {
+            color: red;
+        }
+        .console-log-warning {
+            color: orange;
+        }
+
+        .console-header {
+            background-color: black;
+            color: #9cdcfe;
+            font-family: Arial, Helvetica, sans-serif;
+            border-bottom: 1px solid red;
+        }
+        .console-input-box {
+            display: flex;
+            align-items: center;
+            background-color: black;
+            border-top: 1px solid red;
+
+        }
+        #console-input-text {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: greenyellow;
+            font-family: inherit;
+            font-size: 0.95rem;
+            outline: none;
+    }
+
+        .console-prompt-symbol {
+            color: #4ec9b0;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="console.js" defer></script>
+    <script src="port-functions.js" defer></script>
     <script src="scripts.js" defer></script>
 
 </head>
 
 <body>
-    <table> <!-- Divides graphs, CAN tap and console -->
-        <tr>
-            <th> <!-- Graph layout-->
-                <table>
-                    <tr>
-                        <th>
-                            <div style="width: 800px;"><canvas id="firstTestChart"></canvas></div>
-                        </th>
-                        <th>
-                            <div style="width: 800px;"><canvas id="secondTestChart"></canvas></div>
-                        </th>
-                    </tr>
-                    <tr>
-                        <th>Port 2 Volts</th>
-                        <th>Port 2 Current</th>
-                    </tr>
-                </table>
-            </th>
-            <th> <!-- Console window -->
-                <div id="console-output" class="console-window"; >
-                    This is in the window
-                </div>
-                <code>this is code</code>
-                
-                <form id="usr_cmd_form">
-                    <input type="text" id="usr_cmd" placeholder="\* enter command \*">
-                    <button type="submit">send</button>
-                </form>
-            </th>
+    <p>Select the ports to see:</p>
+    <div id="portSelectionArea"> 
+        <!-- JS code to add dropdowns-->
+    </div>
 
-        </tr>
-    </table>
+    <div id="console-window" class="console-window">
+        <div class="console-header">
+            <span>Console</span>
+        </div>
+        <div id="console-output", class="console-output">
+            Hello! This is the first log.
+        </div>
+        <div id="console-input-box">
+            <span class="prompt-symbol">&gt;</span>
+            <input type="text" id="console-input-text" placeholder="Enter command..." autocomplete="off" spellcheck="false">
+        </div>
+
+    </div>
 
 
 

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Console Demo</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 700px;
+      margin: 40px auto;
+      padding: 0 20px;
+      background-color: #f4f4f9;
+      color: #222;
+    }
+
+    /* Target paragraph styling */
+    .target-box {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      margin-bottom: 24px;
+    }
+
+    /* Console Window Styling */
+    .console-window {
+      background-color: #1e1e1e;
+      color: #d4d4d4;
+      font-family: 'Courier New', Courier, monospace;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .console-header {
+      background-color: #2d2d2d;
+      padding: 8px 14px;
+      font-size: 0.85rem;
+      color: #9cdcfe;
+      border-bottom: 1px solid #3c3c3c;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .console-output {
+      height: 250px;
+      overflow-y: auto;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.9rem;
+    }
+
+    .log-entry {
+      line-height: 1.4;
+      word-break: break-word;
+    }
+
+    .timestamp {
+      color: #6a9955;
+      margin-right: 8px;
+    }
+
+    .log-command {
+      color: #ce9178;
+    }
+
+    .log-system {
+      color: #569cd6;
+    }
+
+    .log-error {
+      color: #f44747;
+    }
+
+    .console-input-row {
+      display: flex;
+      align-items: center;
+      background-color: #252526;
+      padding: 10px 14px;
+      border-top: 1px solid #3c3c3c;
+    }
+
+    .prompt-symbol {
+      color: #4ec9b0;
+      font-weight: bold;
+      margin-right: 8px;
+    }
+
+    #console-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: greenyellow;
+      font-family: inherit;
+      font-size: 0.95rem;
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="target-box">
+    <h3>Target Element</h3>
+    <p id="target-text">This is the original paragraph text. Use the console below to change me!</p>
+  </div>
+
+  <!-- Console UI -->
+  <div class="console-window">
+    <div class="console-header">
+      <span>Interactive Web Console</span>
+      <span>Commands: set-text &lt;msg&gt; | time</span>
+    </div>
+    
+    <div id="console-output" class="console-output">
+      <div class="log-entry log-system">Console initialized. Type a command and press Enter (press Tab to autocomplete).</div>
+    </div>
+
+    <div class="console-input-row">
+      <span class="prompt-symbol">&gt;</span>
+      <input type="text" id="console-input" placeholder="Enter command..." autocomplete="off" spellcheck="false">
+    </div>
+  </div>
+
+  <script>
+    // 1. Grab DOM Elements
+    const consoleOutput = document.getElementById('console-output');
+    const consoleInput = document.getElementById('console-input');
+    const targetParagraph = document.getElementById('target-text');
+
+    // 2. Define Available Commands
+    // Using an object makes it easy to scale and inspect command names for autocomplete
+    const commands = {
+      'set-text': (args) => {
+        const newText = args.join(' ');
+        if (!newText) {
+          logMessage('Usage: set-text <your new text>', 'log-error');
+          return;
+        }
+        targetParagraph.textContent = newText;
+        logMessage(`Updated paragraph text to: "${newText}"`, 'log-system');
+      },
+      'time': () => {
+        const now = new Date().toLocaleTimeString();
+        alert(`Current Time: ${now}`);
+        logMessage('Displayed current time alert.', 'log-system');
+      }
+    };
+
+    // 3. Helper: Get Formatted Timestamp
+    function getTimestamp() {
+      return new Date().toLocaleTimeString([], { hour12: false });
+    }
+
+    // 4. Helper: Print Messages to the Console Window
+    function logMessage(text, className = '') {
+      const entry = document.createElement('div');
+      entry.className = `log-entry ${className}`;
+
+      const timeSpan = document.createElement('span');
+      timeSpan.className = 'timestamp';
+      timeSpan.textContent = `[${getTimestamp()}]`;
+
+      const textSpan = document.createElement('span');
+      textSpan.textContent = text;
+
+      entry.appendChild(timeSpan);
+      entry.appendChild(textSpan);
+      consoleOutput.appendChild(entry);
+
+      // Auto-scroll to the bottom when new logs appear
+      consoleOutput.scrollTop = consoleOutput.scrollHeight;
+    }
+
+    // 5. Parse and Execute User Input
+    function handleCommand(rawInput) {
+      const trimmed = rawInput.trim();
+      if (!trimmed) return;
+
+      // Echo the user's command with a timestamp
+      logMessage(`> ${trimmed}`, 'log-command');
+
+      // Split input by spaces: first word is the command, the rest are arguments
+      const parts = trimmed.split(' ');
+      const commandName = parts[0].toLowerCase();
+      const args = parts.slice(1);
+
+      if (commands[commandName]) {
+        commands[commandName](args);
+      } else {
+        logMessage(`Unknown command: "${commandName}". Available: ${Object.keys(commands).join(', ')}`, 'log-error');
+      }
+    }
+
+    // 6. Listen for Enter (Submit) and Tab (Autocomplete)
+    consoleInput.addEventListener('keydown', (e) => {
+      // Handle Command Submission
+      if (e.key === 'Enter') {
+        handleCommand(consoleInput.value);
+        consoleInput.value = '';
+      }
+
+      // Handle Tab Autocomplete
+      if (e.key === 'Tab') {
+        e.preventDefault(); // Prevent focus from jumping to the next element on the page
+
+        const currentInput = consoleInput.value.trimStart().toLowerCase();
+        if (!currentInput) return;
+
+        // Only autocomplete if the user is still typing the first word (the command name)
+        if (!currentInput.includes(' ')) {
+          const availableCommands = Object.keys(commands);
+          const match = availableCommands.find(cmd => cmd.startsWith(currentInput));
+
+          if (match) {
+            // Fill in the command and add a trailing space if it expects arguments
+            consoleInput.value = match === 'set-text' ? `${match} ` : match;
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

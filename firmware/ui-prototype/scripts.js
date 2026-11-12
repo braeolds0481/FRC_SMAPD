@@ -1,29 +1,12 @@
-function logToConsole(message) {
-    const consoleBox = document.getElementById('console-output');
+// ========================
+// === GLOBAL CONSTANTS ===
+// ========================
 
-    // Create a new line element
-    const line = document.createElement('div');
-    line.className = 'log-line';
-    line.textContent = `> ${message}`;
+const VISIBLE_PORTS = 5;
+// create an array of dropdown port menu objects
+const portDropdowns = [];
 
-    // Append it to the console box
-    consoleBox.appendChild(line);
-
-    // Automatically scroll down to the newest log
-    consoleBox.scrollTop = consoleBox.scrollHeight;
-}
-
-
-// user enters something to the console
-const usr_cmd_form = document.getElementById("usr_cmd_form");
-usr_cmd_form.addEventListener("submit", function(event) {
-    
-    const inputValue = document.getElementById("usr_cmd").value;
-    alert("Sent a command: " + inputValue);
-});
-
-
-
+const PORTS = new portObjectsHandler(22);   // specify 22 ports in use
 
 
 function createChart(canvasID, title, labels, data, lineColor) {
@@ -50,10 +33,69 @@ function createChart(canvasID, title, labels, data, lineColor) {
     });
 }
 
-const xAxisLabels = ['0', '1', '2', '3', '4'];
+// =========================
+// === CLASS DEFINITIONS ===
+// =========================
 
-const chart1data = [3, 4, 3, 4, 17, 5, 4, 6, 7];
-const chart2data = [3, 4, 3, 4, 17, 5, 4, 6, 7];
 
-createChart('firstTestChart', "Chart 1 Title", xAxisLabels, chart1data, "blue");
-createChart('secondTestChart', "Chart 2 Title", xAxisLabels, chart2data, "red");
+class portDropdown {
+    constructor() {
+        this.selectElement = document.createElement('select');
+        this.populateOptions();
+    }
+
+    populateOptions() {
+        // reset the contents of the menu
+        this.selectElement.innerHTML = '<option value="" disabled selected>Select a port...</option>';
+
+        // for every port object, add its name as an option
+        PORT_OBJECTS.forEach((port, index) => {
+            const option = document.createElement('option');
+            option.value = index;
+            option.textContent = port.name;
+
+            this.selectElement.appendChild(option); // add the new option to the array of options
+        });
+    }
+    
+}
+
+function refreshAllDropdowns() {
+    portDropdowns.forEach(dropdown => {
+        dropdown.populateOptions();
+    });
+}
+
+
+
+
+
+// ===========================
+// === MAIN JS TO RUN ONCE ===
+// ===========================
+
+
+
+// add the dropdowns to the selection area
+const portSelectionArea = document.getElementById('portSelectionArea');
+portSelectionArea.innerHTML = ''; // clear the inner HTML
+
+for(let i = 0; i < VISIBLE_PORTS; i++) {
+
+    const dropdownInstance = new portDropdown();
+    portDropdowns.push(dropdownInstance);
+    portSelectionArea.appendChild(dropdownInstance.selectElement);
+}
+
+
+function updateVisibleCharts() {
+    PORT_OBJECTS.forEach(element => {
+        if(element.visible === true) {
+            // later code
+        }
+    });
+
+}
+
+
+
