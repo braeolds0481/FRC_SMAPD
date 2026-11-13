@@ -11,25 +11,15 @@ class portObjectsHandler {
         }
     }
 
-    findByID(target) {
-        return PORT_OBJECTS.find(port_object => port_object.id == target) || null;
-    }
-
-    findByName(target) {
-        return PORT_OBJECTS.find(port_object => port_object.name == target) || null;
-    }
-
-    renamePort(target, newName) {
+    // searches ports for name or ID, returning the object if found
+    findPort(target) {
         const isNumber = /^\d+$/.test(target);
 
-        if(isNumber) {
-            if(this.findByID(target) != null) 
-                return this.findByID(target).rename(newName);
-        } else {
-            if (this.findByName(target) != null) 
-                return this.findByName(target).rename(newName);
+        if(isNumber) { // search by ID
+            return PORT_OBJECTS.find(port_object => port_object.id == target) || null;
+        } else {    // search by name
+            return PORT_OBJECTS.find(port_object => port_object.name == target) || null;
         }
-        return null;
         
     }
 
@@ -44,6 +34,7 @@ class portObject {
         this.IV_data = [];
         this.name = `Port ${i}`;
         this.visible = false; // is it on screen?
+        this.enabled = false;
     }
 
     add(voltage, current) {
@@ -67,6 +58,18 @@ class portObject {
 
     rename(newName) {
         this.name = newName;
+        return this.id;
+    }
+
+    enable() {
+        this.enabled = true;
+        // some verification with MCU might be needed
+        return this.id;
+    }
+
+    disable() {
+        this.enabled = false;
+        // some verification with MCU might be needed
         return this.id;
     }
 

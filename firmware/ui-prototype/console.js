@@ -35,6 +35,7 @@ const commands = {
     // usage:   rename <port #> <new name>
     //          rename <old name> <new name>
 
+    // NEED NAME OVERLAP CHECKING AND CHECKS FOR RENAMING TO NUMBERS (illegal?)
     
     'rename': Object.assign((args) => {
         const num_args = 3; // total # arguments, cmd + args
@@ -45,17 +46,90 @@ const commands = {
 
         } else { // run the command
 
-            const result = PORTS.renamePort(args[1], args[2]);
-            if(result === null) {
-                logMessage("Error: did you specify the correct name or ID?", 'console-log-error');
+            const target = PORTS.findPort(args[1]);
+            if(target === null) {
+                logMessage("Error: port not found. Is name/ID correct?", 'console-log-error');
             } else {
+                const result = target.rename(args[2]);
                 logMessage(`Port #${result} renamed to ${args[2]}`, 'console-log-info');
                 refreshAllDropdowns();
             }
         }
     }, {
         help_text: "Renames a port.\nUsage:\n\t rename <old name or port #> <new name>\nExamples:\n\trename 5 \"Drive Motor\"\n\trename some_strange_name \"better name\""
-    })
+    }),
+
+
+    // ENABLE command to enable power to ports
+    // usage:   enable <port #>
+    //          enable <port name>
+
+    'enable': Object.assign((args) => {
+        const num_args = 2; // total # arguments, cmd + args
+        const err_text  = `Invalid arguments. Type "help ${args[0]}" for usage`;
+
+        if (args.length !== num_args) {
+            logMessage(err_text, 'console-log-warning');
+
+        } else { // run the command
+
+            const target = PORTS.findPort(args[1]);
+            if(target === null) {
+                logMessage("Error: port not found. Is name/ID correct?", 'console-log-error');
+            } else {
+                const result = target.enable();
+                logMessage(`Port #${result} enabled.`, 'console-log-info');
+            }
+        }
+    }, {
+        help_text: "Enables a port's power.\nUsage:\n\t enable <port name or #>\nExamples:\n\tenable 5\n\tenable my_port_name"
+    }),
+
+
+    // DISABLE command to disable power to ports
+    // usage:   disable <port #>
+    //          disable <port name>
+
+    'disable': Object.assign((args) => {
+        const num_args = 2; // total # arguments, cmd + args
+        const err_text  = `Invalid arguments. Type "help ${args[0]}" for usage`;
+
+        if (args.length !== num_args) {
+            logMessage(err_text, 'console-log-warning');
+
+        } else { // run the command
+
+            const target = PORTS.findPort(args[1]);
+            if(target === null) {
+                logMessage("Error: port not found. Is name/ID correct?", 'console-log-error');
+            } else {
+                const result = target.disable();
+                logMessage(`Port #${result} disabled.`, 'console-log-info');
+            }
+        }
+    }, {
+        help_text: "Disables a port's power.\nUsage:\n\t disable <port name or #>\nExamples:\n\tdisable 5\n\tdisable my_port_name"
+    }),
+
+
+    // CLEAR the console output
+    // usage:   clear
+    //
+
+
+    'clear': Object.assign((args) => {
+        const num_args = 1; // total # arguments, cmd + args
+        const err_text  = `Invalid arguments. Type "help ${args[0]}" for usage`;
+
+        if (args.length !== num_args) {
+            logMessage(err_text, 'console-log-warning');
+
+        } else { // run the command
+            consoleOutput.innerHTML = '';
+        }
+    }, {
+        help_text: "Clears the console output. Just type \"clear\"!"
+    }),
 
 };
 
@@ -66,9 +140,6 @@ const commands = {
 const consoleOutput = document.getElementById('console-output');
 const consoleInput = document.getElementById('console-input-text');
 
-// populate list of available commands in alphabetical order:
-
-
 
 // ============================
 // === FUNCTION DEFINITIONS ===
@@ -76,7 +147,9 @@ const consoleInput = document.getElementById('console-input-text');
 
 function parseConsoleCommand(inputText) {
     if (!inputText.trim()) return; // nothing entered
+    sendCommandToServer(inputText);
 
+    
     logMessage("> " + inputText, 'console-log-command');
     console.log("user input: " + inputText);
     // parse the arguments
@@ -99,7 +172,7 @@ function parseConsoleCommand(inputText) {
     if (commands.hasOwnProperty(args_entered[0])) {
         commands[args_entered[0]](args_entered); // Execute the command
     } else {
-        logMessage("\"" + args_entered[0] + "\" is not a valid command. Use help for a list of commands.", 'console-log-warning');
+        logMessage("Unknown command \"" + args_entered[0] + "\". Use help for a list of commands.", 'console-log-warning');
     }
 }
 
